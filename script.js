@@ -60,6 +60,14 @@ function advanceSection() {
 // Unwrap animation
 function triggerUnwrapAnimation(callback) {
     const overlay = document.getElementById('unwrapOverlay');
+    if (!overlay) {
+        // If overlay doesn't exist, just advance immediately
+        if (callback) {
+            callback();
+        }
+        return;
+    }
+    
     overlay.classList.add('active');
     
     setTimeout(() => {
@@ -89,6 +97,7 @@ function selectTeam(team) {
     const teamSelected = document.getElementById('teamSelected');
     teamSelected.classList.remove('hidden');
 }
+
 
 // Update team selection UI
 function updateTeamSelection(team) {
@@ -205,6 +214,11 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// Make functions globally accessible for inline onclick handlers
+window.advanceSection = advanceSection;
+window.selectTeam = selectTeam;
+window.submitRingSize = submitRingSize;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
