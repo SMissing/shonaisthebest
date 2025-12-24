@@ -1,4 +1,12 @@
-/* Reset and Base Styles */
+/* Font face declaration */
+@font-face {
+    font-family: 'StoryScript';
+    src: url('assets/StoryScript-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,23 +14,29 @@
 }
 
 :root {
-    --cream: #F5F1E8;
-    --deep-slate: #2C2C2C;
-    --soft-red: #C97D7D;
-    --warm-red: #B85C5C;
-    --accent-gold: #D4A574;
-    --paper: #F9F6F0;
-    --shadow: rgba(0, 0, 0, 0.2);
+    --christmas-red: #c41e3a;
+    --deep-red: #8b1538;
+    --forest-green: #1b5e20;
+    --dark-green: #0d3e1a;
+    --gold: #d4af37;
+    --warm-gold: #f4d03f;
+    --snow-white: #ffffff;
+    --cream: #fff8f0;
+    --light-cream: #fffef9;
+    --deep-slate: #2c3e50;
+    --shadow: rgba(0, 0, 0, 0.15);
+    --shadow-heavy: rgba(0, 0, 0, 0.3);
+    --shadow-gold: rgba(212, 175, 55, 0.3);
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, var(--cream) 0%, #E8DCC6 50%, var(--cream) 100%);
+    font-family: 'StoryScript', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #0d3e1a 0%, #1b5e20 25%, #0d3e1a 50%, #1b5e20 75%, #0d3e1a 100%);
     background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    animation: gradientShift 20s ease infinite;
     min-height: 100vh;
     overflow-x: hidden;
-    color: var(--deep-slate);
+    color: var(--snow-white);
     position: relative;
 }
 
@@ -31,141 +45,344 @@ body {
     50% { background-position: 100% 50%; }
 }
 
-/* Background Shapes/Sparkles */
-.background-shapes {
+/* Sparkles effect */
+.sparkles {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
     overflow: hidden;
 }
 
-.background-shapes::before,
-.background-shapes::after {
+.sparkles::before,
+.sparkles::after {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--soft-red);
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
     border-radius: 50%;
-    opacity: 0.3;
-    animation: float 20s infinite ease-in-out;
+    opacity: 0.8;
+    animation: sparkle 3s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--gold);
 }
 
-.background-shapes::before {
+.sparkles::before {
     top: 20%;
-    left: 10%;
+    left: 20%;
     animation-delay: 0s;
 }
 
-.background-shapes::after {
+.sparkles::after {
     top: 60%;
-    right: 15%;
-    animation-delay: 5s;
-    width: 15px;
-    height: 15px;
+    left: 80%;
+    animation-delay: 1.5s;
 }
 
-@keyframes float {
+@keyframes sparkle {
     0%, 100% {
-        transform: translateY(0) translateX(0) rotate(0deg);
-    }
-    25% {
-        transform: translateY(-30px) translateX(20px) rotate(90deg);
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
     }
     50% {
-        transform: translateY(-60px) translateX(-10px) rotate(180deg);
+        opacity: 1;
+        transform: translateY(-20px) scale(1.2);
     }
-    75% {
-        transform: translateY(-30px) translateX(-20px) rotate(270deg);
+}
+
+/* Snow falling effect */
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    color: var(--snow-white);
+    font-size: 1.5em;
+    font-family: Arial;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    animation: snowfall linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
     }
 }
 
 /* Container */
 .container {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    overflow: hidden;
 }
 
 /* Sections */
 .section {
     display: none;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     text-align: center;
-    animation: fadeIn 0.6s ease-in-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+    opacity: 0;
+    will-change: transform, opacity;
 }
 
 .section.active {
     display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.section.swiping-out {
+    transform: translate(-50%, -150%);
+    opacity: 0;
+}
+
+.section.swiping-in {
+    transform: translate(-50%, 50%);
+    opacity: 0;
+}
+
+.section.swiping-in.active {
+    transform: translate(-50%, -50%);
+    opacity: 1;
 }
 
 .content {
-    background: var(--paper);
+    background: linear-gradient(135deg, var(--light-cream) 0%, #fff8f0 100%);
     padding: 3rem 2rem;
     border-radius: 20px;
-    box-shadow: 0 10px 40px var(--shadow);
+    box-shadow: 0 10px 40px var(--shadow-heavy), 0 0 30px rgba(212, 175, 55, 0.2);
     position: relative;
+    border: 3px solid var(--gold);
 }
 
 /* Typography */
 .headline {
     font-size: clamp(2.5rem, 5vw, 4rem);
-    color: var(--warm-red);
-    margin-bottom: 1rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    color: var(--christmas-red);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .subtext {
     font-size: clamp(1.1rem, 2vw, 1.5rem);
-    color: var(--deep-slate);
+    color: var(--forest-green);
     margin-bottom: 2.5rem;
-    opacity: 0.9;
+    font-weight: 400;
 }
 
 .section-title {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    color: var(--warm-red);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--christmas-red);
     margin-bottom: 2rem;
     font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .prompt-text {
-    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
     color: var(--deep-slate);
     margin-bottom: 2.5rem;
-    line-height: 1.6;
+    font-weight: 500;
+    text-align: center;
 }
 
-/* Reveal Cards */
-.reveal-card {
-    background: linear-gradient(135deg, var(--soft-red) 0%, var(--warm-red) 100%);
+.final-message {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--christmas-red);
+    margin-bottom: 2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signature {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--forest-green);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.bruce-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+    font-style: italic;
+    color: var(--deep-slate);
+    opacity: 0.8;
+}
+
+.paw-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    opacity: 0.9;
+}
+
+.bruce-text {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--christmas-red) 0%, var(--deep-red) 100%);
     color: white;
-    padding: 2.5rem 2rem;
+    border: 2px solid var(--gold);
+    padding: 1rem 2.5rem;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow), 0 0 20px rgba(196, 30, 58, 0.3);
+    font-family: inherit;
+    position: relative;
+    overflow: visible;
+}
+
+.btn-primary::before {
+    content: '🎀';
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 1.5rem;
+    transform: rotate(-15deg);
+    animation: bowWiggle 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes bowWiggle {
+    0%, 100% { transform: rotate(-15deg); }
+    50% { transform: rotate(-10deg) scale(1.1); }
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--deep-red) 0%, var(--christmas-red) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px var(--shadow-heavy), 0 0 30px rgba(196, 30, 58, 0.4);
+    border-color: var(--warm-gold);
+}
+
+.btn-primary:hover::before {
+    animation: bowWiggle 0.5s ease-in-out infinite;
+    transform: rotate(-10deg) scale(1.2);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:focus {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.btn-secondary {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--forest-green) 0%, var(--dark-green) 100%);
+    color: white;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow), 0 0 20px rgba(27, 94, 32, 0.3);
+    border: 2px solid var(--gold);
+    position: relative;
+    overflow: visible;
+}
+
+.btn-secondary::before {
+    content: '🎀';
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 1.5rem;
+    transform: rotate(-15deg);
+    animation: bowWiggle 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--dark-green) 0%, var(--forest-green) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px var(--shadow-heavy), 0 0 30px rgba(27, 94, 32, 0.4);
+    border-color: var(--warm-gold);
+}
+
+.btn-secondary:hover::before {
+    animation: bowWiggle 0.5s ease-in-out infinite;
+    transform: rotate(-10deg) scale(1.2);
+}
+
+.btn-secondary:focus {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+}
+
+/* Reveal cards */
+.reveal-card {
+    background: linear-gradient(135deg, var(--light-cream) 0%, #fff8f0 100%);
+    padding: 2.5rem;
     border-radius: 15px;
     margin-bottom: 2rem;
-    box-shadow: 0 5px 20px rgba(184, 92, 92, 0.3);
-    animation: cardReveal 0.8s ease-out;
+    border: 3px solid var(--gold);
+    box-shadow: 0 5px 25px var(--shadow-heavy), 0 0 20px rgba(212, 175, 55, 0.2);
+    animation: cardReveal 0.6s ease-out;
+    position: relative;
+}
+
+.reveal-card::before {
+    content: '🎁';
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    font-size: 2rem;
+    animation: giftBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes giftBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(5deg); }
 }
 
 @keyframes cardReveal {
@@ -175,54 +392,45 @@ body {
     }
     to {
         opacity: 1;
-        transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0);
     }
 }
 
 .reveal-text {
-    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--christmas-red);
+    margin-bottom: 1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .reveal-subtext {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    opacity: 0.95;
-    margin-top: 0.5rem;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--forest-green);
+    font-style: italic;
 }
 
-/* Buttons */
-.unwrap-btn {
-    background: var(--warm-red);
-    color: white;
-    border: none;
-    padding: 1rem 2.5rem;
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    font-weight: 600;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(184, 92, 92, 0.4);
-    font-family: inherit;
+.frankie-bennys-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0 auto 1.5rem;
+    display: block;
+    border-radius: 10px;
 }
 
-.unwrap-btn:hover {
-    background: var(--soft-red);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(184, 92, 92, 0.5);
+.hemsley-conservation-centre-image {
+    width: 30%;
+    max-width: 500px;
+    height: auto;
+    margin: 0 auto 2rem;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px var(--shadow);
 }
 
-.unwrap-btn:active {
-    transform: translateY(0);
-}
-
-.unwrap-btn:focus {
-    outline: 3px solid var(--accent-gold);
-    outline-offset: 3px;
-}
-
-/* Team Choice */
-.team-choice-container {
+/* Team selection */
+.team-selection {
     display: flex;
     gap: 2rem;
     justify-content: center;
@@ -231,113 +439,106 @@ body {
 }
 
 .team-card {
-    background: var(--paper);
-    border: 3px solid var(--soft-red);
+    background: var(--light-cream);
+    border: 3px solid var(--gold);
     border-radius: 20px;
-    padding: 2rem 1.5rem;
+    padding: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    flex: 1;
-    min-width: 150px;
-    max-width: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    min-width: 200px;
     font-family: inherit;
+    box-shadow: 0 5px 20px var(--shadow), 0 0 15px rgba(212, 175, 55, 0.2);
+    position: relative;
+}
+
+.team-card::before {
+    content: '🎀';
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 1.3rem;
+    transform: rotate(-15deg);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .team-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(184, 92, 92, 0.3);
-    border-color: var(--warm-red);
+    box-shadow: 0 8px 30px var(--shadow-heavy), 0 0 25px rgba(212, 175, 55, 0.3);
+    border-color: var(--warm-gold);
+}
+
+.team-card:hover::before {
+    opacity: 1;
 }
 
 .team-card:focus {
-    outline: 3px solid var(--accent-gold);
+    outline: 3px solid var(--gold);
     outline-offset: 3px;
 }
 
 .team-card.selected {
-    background: linear-gradient(135deg, var(--soft-red) 0%, var(--warm-red) 100%);
-    border-color: var(--warm-red);
-    color: white;
+    background: linear-gradient(135deg, var(--christmas-red) 0%, var(--deep-red) 100%);
+    border-color: var(--gold);
     transform: scale(1.05);
-    box-shadow: 0 10px 30px rgba(184, 92, 92, 0.4);
+    animation: teamBounce 0.5s ease;
+    box-shadow: 0 8px 30px var(--shadow-heavy), 0 0 30px rgba(196, 30, 58, 0.4);
 }
 
-.team-icon {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.team-card.selected::before {
+    opacity: 1;
+    animation: bowWiggle 1s ease-in-out infinite;
 }
 
-.team-icon svg {
-    width: 100%;
-    height: 100%;
+@keyframes teamBounce {
+    0%, 100% { transform: scale(1.05); }
+    50% { transform: scale(1.1); }
 }
 
 .team-image {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
     object-fit: contain;
     border-radius: 10px;
 }
 
 .team-label {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 600;
+    color: var(--deep-slate);
 }
 
-.team-selected {
-    margin-top: 2rem;
-    animation: bounceIn 0.6s ease-out;
+.team-card.selected .team-label {
+    color: var(--snow-white);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.team-selected.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
-@keyframes bounceIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.3);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    70% {
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.celebration-text {
-    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-    color: var(--warm-red);
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-}
-
-/* What We Do */
+/* What we'll do section */
 .what-we-do {
-    background: var(--cream);
+    background: linear-gradient(135deg, var(--light-cream) 0%, #fff8f0 100%);
     padding: 2rem;
     border-radius: 15px;
     margin: 2rem 0;
     text-align: left;
+    border: 3px solid var(--gold);
+    box-shadow: 0 5px 20px var(--shadow), 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
 .what-we-do h3 {
-    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
-    color: var(--warm-red);
+    font-size: 1.5rem;
+    color: var(--christmas-red);
     margin-bottom: 1rem;
     text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .what-we-do ul {
@@ -346,102 +547,40 @@ body {
 }
 
 .what-we-do li {
-    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-size: 1.1rem;
+    color: var(--deep-slate);
     padding: 0.8rem 0;
     padding-left: 2rem;
     position: relative;
-    color: var(--deep-slate);
 }
 
 .what-we-do li::before {
-    content: '✨';
+    content: '🎁';
     position: absolute;
     left: 0;
 }
 
-/* Voucher Link */
 .voucher-link {
     margin: 2rem 0;
 }
 
-.voucher-btn {
-    display: inline-block;
-    background: var(--accent-gold);
-    color: var(--deep-slate);
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
-}
-
-.voucher-btn:hover {
-    background: #C9955F;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
-}
-
-.voucher-btn:focus {
-    outline: 3px solid var(--warm-red);
-    outline-offset: 3px;
-}
-
-/* Finale */
-.finale-message {
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: var(--warm-red);
-    margin-bottom: 2rem;
-    font-weight: 700;
-    line-height: 1.3;
-}
-
-.signature {
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    color: var(--deep-slate);
-    margin-bottom: 1.5rem;
-    font-style: italic;
-}
-
-.bruce-signature {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--deep-slate);
-    opacity: 0.8;
-}
-
-.paw-print {
-    width: 24px;
-    height: 24px;
-    color: var(--deep-slate);
-}
-
-.bruce-text {
-    font-style: italic;
-}
-
-/* Ring Size Input */
-.ring-size-container {
+/* Ring size form */
+.ring-size-form {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 2px dashed var(--soft-red);
 }
 
-.ring-label {
+.ring-size-form label {
     display: block;
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: var(--deep-slate);
+    font-size: 1.2rem;
+    color: var(--christmas-red);
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.ring-input-group {
+.form-group {
     display: flex;
     gap: 1rem;
     justify-content: center;
@@ -449,106 +588,38 @@ body {
     margin-bottom: 1rem;
 }
 
-.ring-input {
+#ring-size {
     padding: 0.8rem 1.5rem;
-    border: 2px solid var(--soft-red);
+    font-size: 1rem;
+    border: 2px solid var(--gold);
     border-radius: 50px;
-    font-size: clamp(1rem, 2vw, 1.1rem);
     font-family: inherit;
-    max-width: 200px;
-    text-align: center;
+    min-width: 200px;
+    background: white;
+    color: var(--deep-slate);
+    box-shadow: 0 2px 10px var(--shadow);
 }
 
-.ring-input:focus {
-    outline: none;
-    border-color: var(--warm-red);
-    box-shadow: 0 0 0 3px rgba(184, 92, 92, 0.2);
+#ring-size:focus {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.ring-submit-btn {
-    background: var(--warm-red);
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
-    font-size: clamp(1rem, 2vw, 1.1rem);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.ring-submit-btn:hover {
-    background: var(--soft-red);
-    transform: translateY(-2px);
-}
-
-.ring-submit-btn:focus {
-    outline: 3px solid var(--accent-gold);
-    outline-offset: 3px;
-}
-
-.ring-message {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: var(--warm-red);
-    font-weight: 600;
+.cheeky-message {
+    font-size: 1.1rem;
+    color: var(--christmas-red);
+    font-style: italic;
     margin-top: 1rem;
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease;
 }
 
-.ring-message.hidden {
-    display: none;
-}
-
-/* Unwrap Overlay */
-.unwrap-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.unwrap-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.unwrap-paper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #E8DCC6 0%, #D4C4A8 100%);
-    background-image: url('assets/paper-texture.png');
-    background-size: cover;
-    background-repeat: repeat;
-    transform-origin: top left;
-    box-shadow: -10px 0 30px var(--shadow);
-}
-
-.unwrap-overlay.active .unwrap-paper {
-    animation: unwrap 1.2s ease-out forwards;
-}
-
-@keyframes unwrap {
-    0% {
-        transform: translateX(0) translateY(0) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        transform: translateX(20%) translateY(-5%) rotate(5deg);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateX(150%) translateY(-20%) rotate(15deg);
-        opacity: 0;
-    }
+/* Watch again button */
+.watch-again {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px dashed var(--soft-red);
+    text-align: center;
 }
 
 /* Confetti */
@@ -560,13 +631,14 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 999;
+    overflow: hidden;
 }
 
 .confetti {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: var(--warm-red);
+    background: var(--soft-red);
     animation: confettiFall 3s ease-out forwards;
 }
 
@@ -586,35 +658,24 @@ body {
     .content {
         padding: 2rem 1.5rem;
     }
-    
-    .team-choice-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .team-card {
-        max-width: 100%;
-        width: 100%;
-    }
-    
-    .ring-input-group {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .ring-input {
-        width: 100%;
-        max-width: 100%;
-    }
-}
 
-@media (max-width: 480px) {
-    .content {
-        padding: 1.5rem 1rem;
+    .team-selection {
+        flex-direction: column;
+        align-items: center;
     }
-    
-    .unwrap-btn {
-        padding: 0.9rem 2rem;
+
+    .team-card {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #ring-size {
+        width: 100%;
     }
 }
 

@@ -1,135 +1,167 @@
-// State Management
-let currentSection = 1;
-let selectedTeam = null;
+// State management
+let currentSection = 0;
 const totalSections = 6;
 
-// Initialize from localStorage
-function initFromStorage() {
-    const savedSection = localStorage.getItem('christmasUnwrap_section');
-    const savedTeam = localStorage.getItem('christmasUnwrap_team');
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    // Create snowflakes
+    createSnowflakes();
     
-    if (savedSection) {
+    // Load saved progress
+    const savedSection = localStorage.getItem('christmasSection');
+    const savedTeam = localStorage.getItem('selectedTeam');
+    
+    if (savedSection !== null) {
         currentSection = parseInt(savedSection, 10);
-        if (currentSection < 1 || currentSection > totalSections) {
-            currentSection = 1;
-        }
     }
     
-    if (savedTeam) {
-        selectedTeam = savedTeam;
-        updateTeamSelection(savedTeam);
+    // Restore team selection if applicable
+    if (savedTeam && currentSection >= 3) {
+        selectTeam(savedTeam, true);
     }
     
+    // Show current section
     showSection(currentSection);
+    
+    // Update section 5 with team name if team is selected
+    if (savedTeam && currentSection >= 4) {
+        updateTeamName(savedTeam);
+    }
+});
+
+// Create snowflakes
+function createSnowflakes() {
+    const snowContainer = document.querySelector('.snow-container');
+    if (!snowContainer) return;
+    
+    const snowflakeSymbols = ['❄', '❅', '❆'];
+    const numSnowflakes = 50;
+    
+    for (let i = 0; i < numSnowflakes; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+        
+        // Random starting position
+        snowflake.style.left = Math.random() * 100 + '%';
+        
+        // Random animation duration (5-15 seconds)
+        const duration = 5 + Math.random() * 10;
+        snowflake.style.animationDuration = duration + 's';
+        
+        // Random delay
+        snowflake.style.animationDelay = Math.random() * 2 + 's';
+        
+        // Random size
+        const size = 0.8 + Math.random() * 0.7;
+        snowflake.style.fontSize = (size * 1.5) + 'em';
+        snowflake.style.opacity = 0.6 + Math.random() * 0.4;
+        
+        snowContainer.appendChild(snowflake);
+    }
 }
 
 // Show specific section
-function showSection(sectionNum) {
-    // Hide all sections
+function showSection(index, animate = false) {
     const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
+    const currentSectionEl = sections[currentSection];
+    const nextSectionEl = sections[index];
     
-    // Show target section
-    const targetSection = document.getElementById(`section${sectionNum}`);
-    if (targetSection) {
-        targetSection.classList.add('active');
+    if (animate && currentSectionEl && nextSectionEl && index !== currentSection) {
+        // Add swiping-out class to current section
+        currentSectionEl.classList.add('swiping-out');
+        currentSectionEl.classList.remove('active');
+        
+        // Prepare next section for swiping in
+        nextSectionEl.classList.add('swiping-in');
+        nextSectionEl.style.display = 'block';
+        
+        // Trigger animation
+        setTimeout(() => {
+            nextSectionEl.classList.add('active');
+            nextSectionEl.classList.remove('swiping-in');
+        }, 50);
+        
+        // Clean up after animation
+        setTimeout(() => {
+            currentSectionEl.classList.remove('swiping-out');
+            currentSectionEl.style.display = 'none';
+        }, 600);
+    } else {
+        // Simple show/hide without animation
+        sections.forEach((section, i) => {
+            if (i === index) {
+                section.classList.add('active');
+                section.style.display = 'block';
+            } else {
+                section.classList.remove('active', 'swiping-out', 'swiping-in');
+                section.style.display = 'none';
+            }
+        });
     }
     
-    // Update section 5 if team is selected
-    if (sectionNum === 5 && selectedTeam) {
-        updateSection5Content(selectedTeam);
-    }
+    // Save progress
+    localStorage.setItem('christmasSection', index.toString());
 }
 
-// Advance to next section with unwrap animation
-function advanceSection() {
-    if (currentSection >= totalSections) {
-        return;
+// Next section with swipe-up animation
+function nextSection() {
+    if (currentSection < totalSections - 1) {
+        const nextIndex = currentSection + 1;
+        showSection(nextIndex, true);
+        currentSection = nextIndex;
     }
-    
-    // Trigger unwrap animation
-    triggerUnwrapAnimation(() => {
-        currentSection++;
-        localStorage.setItem('christmasUnwrap_section', currentSection.toString());
-        showSection(currentSection);
-    });
-}
-
-// Unwrap animation
-function triggerUnwrapAnimation(callback) {
-    const overlay = document.getElementById('unwrapOverlay');
-    if (!overlay) {
-        // If overlay doesn't exist, just advance immediately
-        if (callback) {
-            callback();
-        }
-        return;
-    }
-    
-    overlay.classList.add('active');
-    
-    setTimeout(() => {
-        overlay.classList.remove('active');
-        if (callback) {
-            callback();
-        }
-    }, 1200);
 }
 
 // Team selection
-function selectTeam(team) {
-    if (selectedTeam) {
-        return; // Already selected
+function selectTeam(team, silent = false) {
+    // Remove previous selection
+    document.querySelectorAll('.team-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Select new team
+    const selectedCard = document.querySelector(`[data-team="${team}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+        
+        // Save selection
+        localStorage.setItem('selectedTeam', team);
+        
+        // Show confetti if not silent (user interaction)
+        if (!silent) {
+            createConfetti();
+            // Automatically move to next section after a short delay
+            setTimeout(() => {
+                nextSection();
+            }, 1500); // Wait 1.5 seconds to show confetti and selection animation
+        }
     }
     
-    selectedTeam = team;
-    localStorage.setItem('christmasUnwrap_team', team);
-    
-    // Update UI
-    updateTeamSelection(team);
-    
-    // Show celebration
-    showCelebration();
-    
-    // Show reveal button
-    const teamSelected = document.getElementById('teamSelected');
-    teamSelected.classList.remove('hidden');
+    // Update team name in section 5
+    updateTeamName(team);
 }
 
-
-// Update team selection UI
-function updateTeamSelection(team) {
-    const slothCard = document.getElementById('teamSloth');
-    const capybaraCard = document.getElementById('teamCapybara');
+// Update team name in section 5
+function updateTeamName(team) {
+    const teamNameSpan = document.getElementById('team-name');
+    const adoptionText = document.getElementById('adoption-text');
     
-    if (team === 'sloth') {
-        slothCard.classList.add('selected');
-        capybaraCard.disabled = true;
-        capybaraCard.style.opacity = '0.5';
-    } else if (team === 'capybara') {
-        capybaraCard.classList.add('selected');
-        slothCard.disabled = true;
-        slothCard.style.opacity = '0.5';
+    if (teamNameSpan) {
+        const teamName = team === 'sloth' ? 'Team Sloth' : 'Team Capybara';
+        teamNameSpan.textContent = teamName;
     }
-}
-
-// Show celebration animation
-function showCelebration() {
-    createConfetti();
     
-    // Bounce animation is handled by CSS
-    const celebrationText = document.querySelector('.celebration-text');
-    if (celebrationText) {
-        celebrationText.style.animation = 'bounceIn 0.6s ease-out';
+    if (adoptionText) {
+        const animalName = team === 'sloth' ? 'sloth' : 'capybara';
+        adoptionText.textContent = `And we're adopting your chosen ${animalName} with an adoption pack.`;
     }
 }
 
-// Create confetti
+// Create confetti effect
 function createConfetti() {
-    const container = document.getElementById('confettiContainer');
-    const colors = ['#B85C5C', '#C97D7D', '#D4A574', '#8B7355'];
+    const container = document.getElementById('confetti');
+    const colors = ['#c41e3a', '#8b1538', '#1b5e20', '#0d3e1a', '#d4af37', '#f4d03f', '#ffffff'];
     
     for (let i = 0; i < 50; i++) {
         const confetti = document.createElement('div');
@@ -145,83 +177,89 @@ function createConfetti() {
         // Remove after animation
         setTimeout(() => {
             confetti.remove();
-        }, 3000);
-    }
-}
-
-// Update section 5 content based on team
-function updateSection5Content(team) {
-    const adoptionText = document.getElementById('adoptionText');
-    const adoptionBullet = document.getElementById('adoptionBullet');
-    
-    if (team === 'sloth') {
-        if (adoptionText) {
-            adoptionText.textContent = 'And we're adopting a sloth with an adoption pack.';
-        }
-        if (adoptionBullet) {
-            adoptionBullet.textContent = 'Choose Team Sloth adoption pack';
-        }
-    } else if (team === 'capybara') {
-        if (adoptionText) {
-            adoptionText.textContent = 'And we're adopting a capybara with an adoption pack.';
-        }
-        if (adoptionBullet) {
-            adoptionBullet.textContent = 'Choose Team Capybara adoption pack';
-        }
+        }, 3500);
     }
 }
 
 // Submit ring size
 function submitRingSize() {
-    const input = document.getElementById('ringSize');
-    const message = document.getElementById('ringSizeMessage');
+    const input = document.getElementById('ring-size');
+    const message = document.getElementById('cheeky-msg');
+    const value = input.value.trim();
     
-    if (!input || !message) {
-        return;
-    }
-    
-    const ringSize = input.value.trim();
-    
-    if (ringSize === '') {
-        message.textContent = 'Come on, enter something! 😏';
+    if (value) {
+        // Save ring size (just for fun, not used elsewhere)
+        localStorage.setItem('ringSize', value);
+        
+        // Show cheeky message
         message.classList.remove('hidden');
-        return;
-    }
-    
-    // Save to localStorage (for fun)
-    localStorage.setItem('christmasUnwrap_ringSize', ringSize);
-    
-    // Show cheeky message
-    message.textContent = 'Noted… definitely not suspicious at all.';
-    message.classList.remove('hidden');
-    
-    // Disable input
-    input.disabled = true;
-    const submitBtn = document.querySelector('.ring-submit-btn');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitted ✓';
+        
+        // Clear input
+        input.value = '';
+        
+        // Scroll to message
+        message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        // Focus input if empty
+        input.focus();
     }
 }
 
-// Keyboard navigation support
-document.addEventListener('keydown', (e) => {
-    // Allow Enter key to submit ring size
-    if (e.key === 'Enter' && currentSection === 6) {
-        const input = document.getElementById('ringSize');
-        if (input && document.activeElement === input) {
-            submitRingSize();
-        }
+// Allow Enter key to submit ring size
+document.addEventListener('DOMContentLoaded', () => {
+    const ringSizeInput = document.getElementById('ring-size');
+    if (ringSizeInput) {
+        ringSizeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitRingSize();
+            }
+        });
     }
 });
 
-// Make functions globally accessible for inline onclick handlers
-window.advanceSection = advanceSection;
-window.selectTeam = selectTeam;
-window.submitRingSize = submitRingSize;
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initFromStorage();
-});
+// Restart experience from the beginning
+function restartExperience() {
+    // Reset state
+    const oldSection = currentSection;
+    currentSection = 0;
+    
+    // Clear saved progress
+    localStorage.removeItem('christmasSection');
+    localStorage.removeItem('selectedTeam');
+    
+    // Reset team selection UI
+    document.querySelectorAll('.team-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Reset team name placeholders
+    const teamNameSpan = document.getElementById('team-name');
+    const adoptionText = document.getElementById('adoption-text');
+    if (teamNameSpan) {
+        teamNameSpan.textContent = 'Team Sloth or Team Capybara';
+    }
+    if (adoptionText) {
+        adoptionText.textContent = 'And we\'re adopting your chosen animal with an adoption pack.';
+    }
+    
+    // Reset ring size form
+    const ringInput = document.getElementById('ring-size');
+    const cheekyMsg = document.getElementById('cheeky-msg');
+    if (ringInput) {
+        ringInput.value = '';
+    }
+    if (cheekyMsg) {
+        cheekyMsg.classList.add('hidden');
+    }
+    
+    // Show first section with animation if not already there
+    if (oldSection !== 0) {
+        showSection(0, true);
+    } else {
+        showSection(0, false);
+    }
+    
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 

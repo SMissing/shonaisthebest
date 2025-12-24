@@ -1,83 +1,67 @@
 # Christmas Unwrap Experience for Shona ❤️
 
-A single-page interactive Christmas "unwrap" experience built with vanilla HTML, CSS, and JavaScript.
+A single-page, interactive Christmas "unwrap" experience built as a static site for GitHub Pages.
 
-## Features
+## 🚀 Quick Start
 
-- 6-section interactive story with smooth transitions
-- Unwrap animations with paper peeling effects
-- Team Sloth vs Team Capybara selection
-- Progress persistence via localStorage
-- Fully responsive (mobile + desktop)
-- No build tools required - just open `index.html`!
+Simply open `index.html` in your browser to test locally. No build tools or server required!
 
-## Files
+## 📦 GitHub Pages Setup
 
-- `index.html` - Main HTML structure
-- `styles.css` - All styling and animations
-- `script.js` - State management and interactions
-- `assets/` - Folder for images and other assets
+1. **Push to GitHub:**
+   - Create a new repository on GitHub
+   - Push all files to the `main` branch (or `master`)
 
-## How to Test Locally
+2. **Enable GitHub Pages:**
+   - Go to your repository settings
+   - Navigate to "Pages" in the left sidebar
+   - Under "Source", select your branch (usually `main` or `master`)
+   - Select the root folder (`/`)
+   - Click "Save"
 
-1. Simply open `index.html` in your web browser
-2. No server needed - it works as a static file
-3. Test on different screen sizes by resizing your browser window
+3. **Access your site:**
+   - Your site will be available at: `https://[your-username].github.io/[repository-name]`
+   - It may take a few minutes to go live
 
-## GitHub Pages Setup
+## 🖼️ Adding/Replacing Images
 
-### Option 1: Using GitHub's Web Interface
+All images are stored in the `/assets/` folder:
 
-1. Push this repository to GitHub
-2. Go to your repository on GitHub
-3. Click **Settings** → **Pages** (in the left sidebar)
-4. Under **Source**, select:
-   - **Branch**: `main` (or `master`)
-   - **Folder**: `/ (root)`
-5. Click **Save**
-6. Your site will be available at: `https://[your-username].github.io/shonaisthebest/`
+- `paper-texture.png` - Used for the unwrap animation overlay
+- `sloth.png` - Team Sloth selection image
+- `capybara.png` - Team Capybara selection image
 
-### Option 2: Using GitHub CLI
+To replace images:
+1. Add your new image files to the `/assets/` folder
+2. Keep the same filenames, or update the references in:
+   - `index.html` (for sloth/capybara images)
+   - `styles.css` (for paper-texture.png in the `.paper-layer` background)
 
-```bash
-git add .
-git commit -m "Initial commit"
-git push origin main
-```
+## 🧪 Testing Locally
 
-Then follow steps 2-6 from Option 1.
+1. **Simple method:**
+   - Double-click `index.html` to open in your default browser
+   - Or right-click → "Open with" → choose your browser
 
-## Adding Images
+2. **Using a local server (recommended for testing):**
+   - **Python 3:** Run `python -m http.server 8000` in the project directory, then visit `http://localhost:8000`
+   - **Node.js:** Install `http-server` globally (`npm install -g http-server`), then run `http-server` in the project directory
+   - **VS Code:** Use the "Live Server" extension
 
-If you want to replace the SVG placeholders with actual images:
+## ✨ Features
 
-1. Place your images in the `assets/` folder
-2. Update the `<svg>` elements in `index.html` (sections 4 and 6) with `<img>` tags:
+- **Progress saving:** Uses localStorage to remember which section you're on
+- **Team selection:** Saves your sloth/capybara choice
+- **Responsive design:** Works on mobile and desktop
+- **Accessibility:** Proper button elements, focus states, and ARIA labels
+- **Smooth animations:** CSS transitions and keyframes for a polished feel
 
-```html
-<!-- Example for Team Sloth card -->
-<img src="assets/sloth.png" alt="Sloth illustration" class="team-icon">
-```
+## 📝 Notes
 
-3. Make sure image paths are relative (e.g., `assets/image.png`)
-
-## Browser Compatibility
-
-- Modern browsers (Chrome, Firefox, Safari, Edge)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-- Uses CSS Grid, Flexbox, and modern JavaScript (ES6+)
-
-## Notes
-
-- Progress is saved in localStorage, so refreshing won't reset the experience
-- Team selection is also persisted
-- The ring size input is just for fun - it saves to localStorage too!
-
-## Customization
-
-- Colors: Edit CSS variables in `styles.css` (`:root` section)
-- Content: Edit text directly in `index.html`
-- Animations: Adjust timing in `styles.css` keyframe animations
+- The site works completely offline once loaded
+- All progress is saved in browser localStorage
+- No external dependencies or frameworks required
+- Fully static - perfect for GitHub Pages
 
 ---
 

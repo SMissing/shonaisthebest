@@ -7,127 +7,117 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Sparkles/Shapes Background -->
-    <div class="background-shapes"></div>
+    <!-- Sparkles background effect -->
+    <div class="sparkles" aria-hidden="true"></div>
     
-    <!-- Main Container -->
-    <div class="container" id="mainContainer">
+    <!-- Snow falling effect -->
+    <div class="snow-container" aria-hidden="true"></div>
+    
+    <!-- Main container -->
+    <main class="container">
         <!-- Section 1: Intro -->
-        <section class="section active" id="section1" data-section="1">
+        <section class="section active" data-section="0">
             <div class="content">
                 <h1 class="headline">Merry Christmas Shona</h1>
                 <p class="subtext">I made you a little unwrap page ❤️</p>
-                <button class="unwrap-btn" onclick="advanceSection()">Unwrap</button>
+                <button class="btn-primary" onclick="nextSection()">Unwrap</button>
             </div>
         </section>
 
-        <!-- Section 2: Ring Coming Soon -->
-        <section class="section" id="section2" data-section="2">
+        <!-- Section 2: Unwrap #1 -->
+        <section class="section" data-section="1">
             <div class="content">
-                <h2 class="section-title">Unwrap #1</h2>
                 <div class="reveal-card">
-                    <p class="reveal-text">Ring coming soon… 👀</p>
+                    <p class="reveal-text">I am sorry I couldn't get your ring in time...</p>
+                    <p class="reveal-subtext">But for now, here's a little something...</p>
                 </div>
-                <button class="unwrap-btn" onclick="advanceSection()">Unwrap again</button>
+                <button class="btn-primary" onclick="nextSection()">Unwrap again</button>
             </div>
         </section>
 
-        <!-- Section 3: Dinner -->
-        <section class="section" id="section3" data-section="3">
+        <!-- Section 3: Unwrap #2 -->
+        <section class="section" data-section="2">
             <div class="content">
-                <h2 class="section-title">Unwrap #2</h2>
                 <div class="reveal-card">
+                    <img src="assets/frankie-&-bennys.png" alt="Frankie & Benny's" class="frankie-bennys-image">
                     <p class="reveal-text">Dinner for 2 at Frankie & Benny's 🍝🥤</p>
                     <p class="reveal-subtext">Pick a day and we'll go.</p>
                 </div>
-                <button class="unwrap-btn" onclick="advanceSection()">That's not all… unwrap again</button>
+                <button class="btn-primary" onclick="nextSection()">That's not all… unwrap again</button>
             </div>
         </section>
 
-        <!-- Section 4: Team Choice -->
-        <section class="section" id="section4" data-section="4">
+        <!-- Section 4: Team Selection -->
+        <section class="section" data-section="3">
             <div class="content">
-                <h2 class="section-title">Unwrap #3</h2>
                 <p class="prompt-text">Important question… are you Team Sloth or Team Capybara?</p>
-                <div class="team-choice-container">
-                    <button class="team-card" id="teamSloth" onclick="selectTeam('sloth')" aria-label="Choose Team Sloth">
-                        <div class="team-icon">
-                            <img src="assets/sloth.png" alt="Sloth illustration" class="team-image">
-                        </div>
+                <div class="team-selection">
+                    <button class="team-card" data-team="sloth" onclick="selectTeam('sloth')" aria-label="Select Team Sloth">
+                        <img src="assets/sloth.png" alt="Sloth" class="team-image">
                         <span class="team-label">Team Sloth</span>
                     </button>
-                    <button class="team-card" id="teamCapybara" onclick="selectTeam('capybara')" aria-label="Choose Team Capybara">
-                        <div class="team-icon">
-                            <img src="assets/capybara.png" alt="Capybara illustration" class="team-image">
-                        </div>
+                    <button class="team-card" data-team="capybara" onclick="selectTeam('capybara')" aria-label="Select Team Capybara">
+                        <img src="assets/capybara.png" alt="Capybara" class="team-image">
                         <span class="team-label">Team Capybara</span>
                     </button>
                 </div>
-                <div id="teamSelected" class="team-selected hidden">
-                    <p class="celebration-text">🎉 Great choice! 🎉</p>
-                    <button class="unwrap-btn" onclick="advanceSection()">Reveal the plan</button>
-                </div>
             </div>
         </section>
 
-        <!-- Section 5: Conservation Centre -->
-        <section class="section" id="section5" data-section="5">
+        <!-- Section 5: Hemsley Conservation Centre -->
+        <section class="section" data-section="4">
             <div class="content">
                 <h2 class="section-title">Hemsley Conservation Centre 🐾</h2>
+                
                 <div class="reveal-card">
                     <p class="reveal-text">We're going to Hemsley Conservation Centre!</p>
-                    <p class="reveal-subtext" id="adoptionText">And we're adopting your chosen animal with an adoption pack.</p>
+                
+                    <p class="reveal-subtext" id="adoption-text">And we're adopting your chosen animal with an adoption pack.</p>
                 </div>
                 <div class="what-we-do">
                     <h3>What we'll do</h3>
                     <ul>
                         <li>Go to the zoo / conservation centre</li>
                         <li>Meet lots of animals</li>
-                        <li id="adoptionBullet">Choose Team Sloth or Team Capybara adoption pack</li>
-                        <li>Make a proper day of it</li>
+                        <li>Choose <span id="team-name">Team Sloth or Team Capybara</span> adoption pack</li>
+                        <li>Finally get to see some Capybaras!</li>
                     </ul>
                 </div>
                 <div class="voucher-link">
-                    <a href="https://www.groupon.co.uk/deals/hemsley-conservation-centre-6?isGift=true#merchant-map-header" target="_blank" rel="noopener noreferrer" class="voucher-btn">View voucher details</a>
+                    <a href="https://www.hemsleyconservationcentre.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary">See where we're going</a>
                 </div>
-                <button class="unwrap-btn" onclick="advanceSection()">Final unwrap</button>
+                <button class="btn-primary" onclick="nextSection()">Final unwrap</button>
             </div>
         </section>
 
         <!-- Section 6: Finale -->
-        <section class="section" id="section6" data-section="6">
+        <section class="section" data-section="5">
             <div class="content">
-                <h2 class="finale-message">Merry Christmas Shona, I love you so much.</h2>
-                <p class="signature">From Sam</p>
-                <div class="bruce-signature">
-                    <svg class="paw-print" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C10 2 8 3 8 5c0 2 2 3 4 3s4-1 4-3c0-2-2-3-4-3z" fill="currentColor"/>
-                        <circle cx="6" cy="8" r="2" fill="currentColor"/>
-                        <circle cx="18" cy="8" r="2" fill="currentColor"/>
-                        <circle cx="10" cy="12" r="2" fill="currentColor"/>
-                        <circle cx="14" cy="12" r="2" fill="currentColor"/>
-                    </svg>
-                    <p class="bruce-text">and also Bruce</p>
+                <h2 class="final-message">Merry Christmas Shona</h2>
+                <p class="final-message">I love you so much</p>
+                <p class="final-message">xxx</p>
+                <p class="signature">Shona & Sam Forever!</p>
+                <div class="bruce-note">
+                    <img src="assets/Dog_Paw_Print.png" alt="Paw print" class="paw-image">
+                    <span class="bruce-text">and also Bruce</span>
                 </div>
-                <div class="ring-size-container">
-                    <label for="ringSize" class="ring-label">Enter your ring size to continue 😈</label>
-                    <div class="ring-input-group">
-                        <input type="text" id="ringSize" class="ring-input" placeholder="e.g., 6.5" aria-label="Ring size">
-                        <button class="ring-submit-btn" onclick="submitRingSize()">Submit</button>
+                <div class="ring-size-form">
+                    <label for="ring-size">Enter your ring size to receive your ring</label>
+                    <div class="form-group">
+                        <input type="text" id="ring-size" placeholder="e.g., 6, 7, 8..." aria-label="Ring size">
+                        <button class="btn-primary" onclick="submitRingSize()">Submit</button>
                     </div>
-                    <p id="ringSizeMessage" class="ring-message hidden"></p>
+                    <p class="cheeky-message hidden" id="cheeky-msg">Noted… definitely not suspicious at all.</p>
+                </div>
+                <div class="watch-again">
+                    <button class="btn-secondary" onclick="restartExperience()">Watch again</button>
                 </div>
             </div>
         </section>
-    </div>
+    </main>
 
-    <!-- Unwrap Paper Overlay -->
-    <div class="unwrap-overlay" id="unwrapOverlay">
-        <div class="unwrap-paper"></div>
-    </div>
-
-    <!-- Confetti Container -->
-    <div class="confetti-container" id="confettiContainer"></div>
+    <!-- Confetti container -->
+    <div class="confetti-container" id="confetti" aria-hidden="true"></div>
 
     <script src="script.js"></script>
 </body>
